@@ -32,10 +32,6 @@ Route::get('/export-db', function () {
         ->setPassword(env('DB_PASSWORD'))
         ->dumpToFile('dump.sql');
 
-
-    $headers = array(
-        'Content-Type: application/pdf',
-    );
    return response()->download(public_path('/dump.sql'));
 });
 
