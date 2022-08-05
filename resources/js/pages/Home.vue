@@ -11,7 +11,7 @@
                     Filer by Date: <br>
                     <input v-model="filter.date" @change="fetchColumns" class="date_filter" type="date"/>
                 </div>
-                <button class="export_button">
+                <button class="export_button" @click="exportDb">
                     Export
                 </button>
             </div>
@@ -81,12 +81,30 @@ export default {
             } else {
                 this.titleRequired = true
             }
+        },
+        async exportDb() {
+            await axios.get('/api/export-db').then(function (r) {
+                const url = window.URL.createObjectURL(new Blob([r.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'exported.sql'); //or any other extension
+                document.body.appendChild(link);
+                link.click();
+
+                //hide loader
+                i.loader = false
+            });
+
         }
     }
 }
 </script>
 
 <style lang="scss">
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
 .nav {
     position: fixed;
     width: 100%;
