@@ -51,7 +51,6 @@ export default {
     methods: {
         async fetchColumns() {
             const { data } = await axios.get('/api/columns', )
-            console.log(data)
         },
         clone({ name }) {
             return { name, id: idGlobal++ };

@@ -36,11 +36,17 @@ class ColumnController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        Column::query()->create([
+            'title' => $request->title
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully Created'
+        ]);
     }
 
     /**
