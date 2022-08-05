@@ -13,9 +13,17 @@ class ColumnController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index($date, $status): \Illuminate\Http\JsonResponse
     {
         $query = Column::query()->with('cards');
+
+        if(isset($status) && $status == 'true' ) {
+            $query->withTrashed();
+        }
+
+        if(isset($date) && $date != 'null' ) {
+            $query->whereDate('created_at', $date);
+        }
 
         return response()->json([
             'data' => $query->get()

@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-    Route::get('/columns', [ColumnController::class, 'index']);
+    Route::get('/columns/{date}/{status}', [ColumnController::class, 'index']);
     Route::post('/column', [ColumnController::class, 'store']);
     Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
 

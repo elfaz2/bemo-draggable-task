@@ -1,7 +1,22 @@
 <template>
     <div class="home_section">
-        <Header/>
-        <Column v-for="(column, index) in columns" :key="index" :column="column" @refresh="fetchColumns"/>
+        <div class="nav">
+            <div class="logo_section">Logo</div>
+            <div class="nav_actions">
+                <div>
+                    Include Deleted
+                    <input v-model="filter.deleted" @change="fetchColumns" class="deleted_filter" type="checkbox"/>
+                </div>
+                <div>
+                    Filer by Date: <br>
+                    <input v-model="filter.date" @change="fetchColumns" class="date_filter" type="date"/>
+                </div>
+                <button class="export_button">
+                    Export
+                </button>
+            </div>
+        </div>
+        <Column v-for="column in columns" :key="column.id" :column="column" @refresh="fetchColumns"/>
         <div class="add_column_container" @click="$modal.show('add-column')">
             Add Column
         </div>
@@ -41,6 +56,10 @@ export default {
         return {
             columns: [],
             titleRequired: false,
+            filter: {
+                deleted: 0,
+                date: "null"
+            },
             form: {
                 title: ""
             }
@@ -51,7 +70,7 @@ export default {
     },
     methods: {
         async fetchColumns() {
-            const { data } = await axios.get('/api/columns')
+            const { data } = await axios.get(`/api/columns/${this.filter.date?this.filter.date: "null"}/${this.filter.deleted}`)
             this.columns = data.data
         },
         async createColumn() {
@@ -68,6 +87,46 @@ export default {
 </script>
 
 <style lang="scss">
+.nav {
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo_section {
+        padding-left: 10px;
+    }
+
+    .nav_actions {
+        display: flex;
+        flex-direction: row;
+        gap: 30px;
+        padding-right: 10px;
+
+        div {
+            display: flex;
+            align-items: center;
+        }
+    }
+    .export_button {
+        color: white;
+        background: #24a0ed;
+        width: 80px;
+        height: 30px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .date_filter {
+        height: 30px;
+        border: 1px solid grey;
+        border-radius: 5px;
+    }
+    .deleted_filter {
+    }
+}
 .create_column_modal {
     .vm--modal {
         width: 50% !important;
@@ -94,8 +153,10 @@ export default {
         .header_section {
             background-color: rgba(0, 0, 0, .3);
             height: 50px;
-            padding-top: 20px;
-            padding-left: 20px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .form_section {
