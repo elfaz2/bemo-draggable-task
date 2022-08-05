@@ -85,6 +85,19 @@ class CardController extends Controller
         //
     }
 
+    public function updateCardPosition(Request $request)
+    {
+        $cards = $request->cards;
+        foreach ($cards as $key => $card) {
+            Card::query()->findOrFail($card['id'])->update([
+                'order' => $key + 1
+            ]);
+        }
+        return response()->json([
+            'message' => 'Card positions successfully updated'
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -2,16 +2,17 @@
     <div class="column_container">
         <div class="column_container_header">
             <label>Title</label>
-            <button class="delete_button" @click="$modal.show('delete-column')"><img :src="deleteIcon" alt="Delete Column Icon"> </button>
+            <button class="delete_button" @click="$modal.show('delete-column')">
+                <img :src="deleteIcon" alt="Delete Column Icon">
+            </button>
         </div>
         <draggable
             class="dragArea list-group"
-            :list="list1"
-            :clone="clone"
-            :group="{ name: 'people', pull: pullFunction }"
-            @start="start"
+            :list="column.cards"
+            :animation="200"
+            ghost-class="ghost-card"
         >
-            <card v-for="element in list1" :key="element.id" :card="element.name"/>
+            <card v-for="card in column.cards" :key="card.id" :card="card"/>
         </draggable>
         <div class="add_card_container" @click="$modal.show('add-card')">
             Add Card
@@ -55,6 +56,7 @@
 <script>
 import draggable from "vuedraggable";
 import Card from "./Card";
+let idGlobal = 8;
 export default {
     name: "Column",
     props: {
@@ -67,8 +69,18 @@ export default {
         Card,
         draggable
     },
+    watch: {
+        column: {
+            handler(val){
+                this.updateCardPosition()
+                // console.log(val.cards, ' updated')
+            },
+            deep: true
+        }
+    },
     data() {
         return {
+            cards: [],
             titleRequired: false,
             descriptionRequired: false,
             form: {
@@ -77,18 +89,12 @@ export default {
               columnId: ""
             },
             deleteIcon: require('../../assets/delete-icon.svg'),
-            list1: [
-                { name: "Jesus", id: 1 },
-                { name: "Paul", id: 2 },
-                { name: "Peter", id: 3 }
-            ],
-            list2: [
-                { name: "Luc", id: 5 },
-                { name: "Thomas", id: 6 },
-                { name: "John", id: 7 }
-            ],
             controlOnStart: true
         };
+    },
+    mounted() {
+      this.cards = this.column.cards
+        // this.updateCardPosition()
     },
     methods: {
         async deleteColumn() {
@@ -106,20 +112,21 @@ export default {
                 this.descriptionRequired = !this.form.description;
             }
         },
-        clone({ name }) {
-            return { name, id: idGlobal++ };
-        },
-        pullFunction() {
-            return this.controlOnStart ? "clone" : true;
-        },
-        start({ originalEvent }) {
-            this.controlOnStart = originalEvent.ctrlKey;
+        async updateCardPosition() {
+            const { cards } =  this.column
+            await axios.post('/api/update-card-position/', { cards })
+            // this.$emit('refresh', true)
         }
     }
 }
 </script>
 
 <style lang="scss">
+.ghost-card {
+    opacity: 0.5;
+    background: #F7FAFC;
+    border: 1px solid #4299e1;
+}
 .create_card_modal {
     .vm--modal {
         width: 50% !important;

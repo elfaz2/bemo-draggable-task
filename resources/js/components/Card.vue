@@ -1,6 +1,6 @@
 <template>
     <div class="card_container">
-        {{ card }}
+        {{ card.title }}
     </div>
 </template>
 
@@ -9,8 +9,8 @@ export default {
     name: "Card",
     props: {
         card: {
-            type: String,
-            default: null
+            type: Object,
+            default: () => {}
         }
     }
 }

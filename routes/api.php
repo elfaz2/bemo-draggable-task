@@ -20,7 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([],function () {
     Route::get('/columns', [ColumnController::class, 'index']);
     Route::post('/column', [ColumnController::class, 'store']);
     Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
@@ -28,4 +27,5 @@ Route::group([],function () {
     Route::get('/cards', [CardController::class, 'index']);
     Route::post('/card', [CardController::class, 'store']);
     Route::put('/card/{id}', [CardController::class, 'update']);
-});
+    Route::post('/update-card-position', [CardController::class, 'updateCardPosition']);
+
