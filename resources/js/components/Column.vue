@@ -11,6 +11,8 @@
             :list="column.cards"
             :animation="200"
             ghost-class="ghost-card"
+            group="cards"
+            @end="handleMoveEnd"
         >
             <card v-for="card in column.cards" :key="card.id" :card="card"/>
         </draggable>
@@ -56,7 +58,6 @@
 <script>
 import draggable from "vuedraggable";
 import Card from "./Card";
-let idGlobal = 8;
 export default {
     name: "Column",
     props: {
@@ -73,7 +74,6 @@ export default {
         column: {
             handler(val){
                 this.updateCardPosition()
-                // console.log(val.cards, ' updated')
             },
             deep: true
         }
@@ -94,9 +94,11 @@ export default {
     },
     mounted() {
       this.cards = this.column.cards
-        // this.updateCardPosition()
     },
     methods: {
+        async handleMoveEnd() {
+            console.log(this.column)
+        },
         async deleteColumn() {
             await axios.delete(`/api/column/${ this.column.id }`)
             this.$modal.hide('delete-column')
@@ -113,9 +115,8 @@ export default {
             }
         },
         async updateCardPosition() {
-            const { cards } =  this.column
-            await axios.post('/api/update-card-position/', { cards })
-            // this.$emit('refresh', true)
+            const { cards, id } =  this.column
+            await axios.post('/api/update-card-position/', { cards, column_id: id })
         }
     }
 }

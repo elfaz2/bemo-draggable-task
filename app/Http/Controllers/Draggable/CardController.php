@@ -90,7 +90,8 @@ class CardController extends Controller
         $cards = $request->cards;
         foreach ($cards as $key => $card) {
             Card::query()->findOrFail($card['id'])->update([
-                'order' => $key + 1
+                'order' => $key + 1,
+                'column_id' => $request->column_id
             ]);
         }
         return response()->json([
