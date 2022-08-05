@@ -4,6 +4,10 @@
             <div class="logo_section">Logo</div>
             <div class="nav_actions">
                 <div>
+                    Access Token:
+                    <input v-model="filter.access_token" @change="fetchColumns" class="date_filter" type=""/>
+                </div>
+                <div>
                     Include Deleted
                     <input v-model="filter.deleted" @change="fetchColumns" class="deleted_filter" type="checkbox"/>
                 </div>
@@ -58,7 +62,8 @@ export default {
             titleRequired: false,
             filter: {
                 deleted: 0,
-                date: "null"
+                date: "null",
+                access_token: "42gA1S5"
             },
             form: {
                 title: ""
@@ -70,7 +75,7 @@ export default {
     },
     methods: {
         async fetchColumns() {
-            const { data } = await axios.get(`/api/columns/${this.filter.date?this.filter.date: "null"}/${this.filter.deleted}`)
+            const { data } = await axios.get(`/api/columns/${this.filter.access_token}/${this.filter.date?this.filter.date: "null"}/${this.filter.deleted}`)
             this.columns = data.data
         },
         async createColumn() {
