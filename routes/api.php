@@ -23,4 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group([],function () {
     Route::get('/columns', [ColumnController::class, 'index']);
     Route::post('/column', [ColumnController::class, 'store']);
+    Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
 });

@@ -1,11 +1,11 @@
 <template>
     <div class="home_section">
         <Header/>
-        <Column v-for="(column, index) in columns" :key="index" :column="column"/>
+        <Column v-for="(column, index) in columns" :key="index" :column="column" @refresh="fetchColumns"/>
         <div class="add_column_container" @click="$modal.show('add-column')">
             Add Column
         </div>
-        <Modal name="add-column">
+        <Modal class="create_modal" name="add-column">
             <div class="create_column_section">
                 <div class="header_section">
                     Create Column.
@@ -68,9 +68,11 @@ export default {
 </script>
 
 <style lang="scss">
-.vm--modal {
-    width: 50% !important;
-    height: 250px !important;
+.create_modal {
+    .vm--modal {
+        width: 50% !important;
+        height: 250px !important;
+    }
 }
 .home_section {
     display: flex;

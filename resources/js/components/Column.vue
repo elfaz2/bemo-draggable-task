@@ -1,7 +1,8 @@
 <template>
     <div class="column_container">
         <div class="column_container_header">
-            Title
+            <label>Title</label>
+            <button class="delete_button" @click="$modal.show('delete-column')"><img :src="deleteIcon" alt="Delete Column Icon"> </button>
         </div>
         <draggable
             class="dragArea list-group"
@@ -15,6 +16,16 @@
         <div class="add_card_container">
             Add Card
         </div>
+        <Modal class="delete-modal" name="delete-column">
+            <div class="delete_column_section">
+                <div class="header_section">
+                    Are you sure you want to delete
+                </div>
+                <button @click="deleteColumn">
+                    Yes
+                </button>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -35,6 +46,7 @@ export default {
     },
     data() {
         return {
+            deleteIcon: require('../../assets/delete-icon.svg'),
             list1: [
                 { name: "Jesus", id: 1 },
                 { name: "Paul", id: 2 },
@@ -49,8 +61,10 @@ export default {
         };
     },
     methods: {
-        async fetchColumns() {
-            const { data } = await axios.get('/api/columns', )
+        async deleteColumn() {
+            await axios.delete(`/api/column/${ this.column.id }`)
+            this.$modal.hide('delete-column')
+            this.$emit('refresh', true)
         },
         clone({ name }) {
             return { name, id: idGlobal++ };
@@ -65,7 +79,34 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.delete-modal {
+    .vm--modal {
+        width: 300px !important;
+        height: 150px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .delete_column_section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        button {
+            margin-top: 10px;
+            width: 70px;
+            height: 35px;
+            background-color: cornflowerblue;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+    }
+}
 .column_container {
     margin: 120px 20px;
     padding: 10px;
@@ -75,7 +116,17 @@ export default {
     background-color: rgba(255, 255, 255, .7);
     border-radius: 10px;
     &_header {
-        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        min-height: 40px;
+
+        .delete_button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
     }
     .add_card_container {
         margin-top: 20px;
