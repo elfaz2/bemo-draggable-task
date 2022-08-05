@@ -19,5 +19,8 @@
         "vue": "^2.4.16",
         "vue-loader": "^15.9.8",
         "vue-template-compiler": "^2.4.16"
+    },
+    "dependencies": {
+        "vuedraggable": "^2.24.3"
     }
 }
