@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->double('order');
-            $table->foreignId('column_id')->constrained('columns');
+            $table->foreignId('column_id')->constrained('columns')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();

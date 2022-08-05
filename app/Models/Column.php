@@ -45,5 +45,9 @@ class Column extends Model
                 $model->order = 1;
             }
         });
+
+        static::deleting(function($model) {
+            $model->cards()->delete();
+        });
     }
 }
