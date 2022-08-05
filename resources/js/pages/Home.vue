@@ -1,7 +1,10 @@
 <template>
     <div class="home_section">
         <div class="nav">
-            <div class="logo_section">Logo</div>
+            <div class="logo_section">
+                <img :src="logo" width="80" alt="BeMo Logo"> <br>
+                Draggable
+            </div>
             <div class="nav_actions">
                 <div>
                     Access Token:
@@ -58,6 +61,7 @@ export default {
     },
     data() {
         return {
+            logo: require('../../assets/logo.webp'),
             columns: [],
             titleRequired: false,
             filter: {

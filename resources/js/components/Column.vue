@@ -177,7 +177,7 @@ export default {
 .column_container {
     margin: 120px 20px;
     padding: 10px;
-    width: 300px;
+    min-width: 300px;
     max-height: 700px;
     min-height: 100px;
     background-color: rgba(255, 255, 255, .7);
