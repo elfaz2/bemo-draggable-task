@@ -24,4 +24,8 @@ Route::group([],function () {
     Route::get('/columns', [ColumnController::class, 'index']);
     Route::post('/column', [ColumnController::class, 'store']);
     Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
+
+    Route::get('/cards', [CardController::class, 'index']);
+    Route::post('/card', [CardController::class, 'store']);
+    Route::put('/card/{id}', [CardController::class, 'update']);
 });

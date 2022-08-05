@@ -13,7 +13,7 @@
         >
             <card v-for="element in list1" :key="element.id" :card="element.name"/>
         </draggable>
-        <div class="add_card_container">
+        <div class="add_card_container" @click="$modal.show('add-card')">
             Add Card
         </div>
         <Modal class="delete-modal" name="delete-column">
@@ -24,6 +24,29 @@
                 <button @click="deleteColumn">
                     Yes
                 </button>
+            </div>
+        </Modal>
+        <Modal class="create_card_modal" name="add-card">
+            <div class="create_column_section">
+                <div class="header_section">
+                    Create Column.
+                </div>
+                <div class="form_section">
+                    <div>
+                        Title:
+                        <input v-model="form.title" @keydown="titleRequired = false">
+                        <small class="required_field" v-if="titleRequired"> Title field is required!</small>
+                    </div>
+                    <br>
+                    <div>
+                        Description:
+                        <textarea rows="5" v-model="form.description" @keydown="descriptionRequired = false"/>
+                        <small class="required_field" v-if="descriptionRequired"> Description field is required!</small>
+                    </div>
+                    <button @click="createCard">
+                        Submit
+                    </button>
+                </div>
             </div>
         </Modal>
     </div>
@@ -46,6 +69,13 @@ export default {
     },
     data() {
         return {
+            titleRequired: false,
+            descriptionRequired: false,
+            form: {
+              title: "",
+              description: "",
+              columnId: ""
+            },
             deleteIcon: require('../../assets/delete-icon.svg'),
             list1: [
                 { name: "Jesus", id: 1 },
@@ -66,6 +96,16 @@ export default {
             this.$modal.hide('delete-column')
             this.$emit('refresh', true)
         },
+        async createCard() {
+            if(this.form.title !== "" && this.form.description !== "") {
+                this.form.columnId = this.column.id
+                await axios.post(`/api/card`, this.form)
+                this.$emit('refresh', true)
+            } else  {
+                this.titleRequired = !this.form.title;
+                this.descriptionRequired = !this.form.description;
+            }
+        },
         clone({ name }) {
             return { name, id: idGlobal++ };
         },
@@ -80,6 +120,12 @@ export default {
 </script>
 
 <style lang="scss">
+.create_card_modal {
+    .vm--modal {
+        width: 50% !important;
+        height: 400px !important;
+    }
+}
 .delete-modal {
     .vm--modal {
         width: 300px !important;

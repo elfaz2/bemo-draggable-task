@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Draggable;
 
 use App\Http\Controllers\Controller;
+use App\Models\Card;
 use Illuminate\Http\Request;
 
 class CardController extends Controller
@@ -10,11 +11,15 @@ class CardController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        //
+        $query = Card::query();
+
+        return response()->json([
+            'data' => $query->get()
+        ]);
     }
 
     /**
@@ -31,11 +36,19 @@ class CardController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
-        //
+        Card::query()->create([
+            'column_id' => $request->columnId,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'message' => 'Successfully Created'
+        ]);
     }
 
     /**

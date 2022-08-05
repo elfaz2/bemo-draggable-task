@@ -5,7 +5,7 @@
         <div class="add_column_container" @click="$modal.show('add-column')">
             Add Column
         </div>
-        <Modal class="create_modal" name="add-column">
+        <Modal class="create_column_modal" name="add-column">
             <div class="create_column_section">
                 <div class="header_section">
                     Create Column.
@@ -68,7 +68,7 @@ export default {
 </script>
 
 <style lang="scss">
-.create_modal {
+.create_column_modal {
     .vm--modal {
         width: 50% !important;
         height: 250px !important;
@@ -104,8 +104,10 @@ export default {
                 color: red;
             }
             input {
-                width: 100%;
                 height: 30px;
+            }
+            input, textarea {
+                width: 100%;
                 border: 1px solid black;
                 border-radius: 5px;
                 margin-top: 10px;
