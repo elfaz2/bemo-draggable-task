@@ -10,9 +10,8 @@
             class="dragArea list-group"
             :list="column.cards"
             :animation="200"
-            ghost-class="ghost-card"
+            ghost-class="ghost"
             group="cards"
-            @end="handleMoveEnd"
         >
             <card v-for="card in column.cards" :key="card.id" :card="card"/>
         </draggable>
@@ -32,7 +31,8 @@
         <Modal class="create_card_modal" name="add-card">
             <div class="create_column_section">
                 <div class="header_section">
-                    Create Column.
+                   <label> Create Card.</label>
+                    <button  @click="$modal.hide('add-card')">X</button>
                 </div>
                 <div class="form_section">
                     <div>
@@ -73,32 +73,29 @@ export default {
     watch: {
         column: {
             handler(val){
-                this.updateCardPosition()
+                // this.updateCardPosition()
             },
             deep: true
         }
     },
     data() {
         return {
-            cards: [],
             titleRequired: false,
             descriptionRequired: false,
+            col_id: "",
             form: {
               title: "",
               description: "",
-              columnId: ""
+              columnId: this.column.id
             },
             deleteIcon: require('../../assets/delete-icon.svg'),
             controlOnStart: true
         };
     },
-    mounted() {
-      this.cards = this.column.cards
+    created() {
+        this.col_id = this.column.id
     },
     methods: {
-        async handleMoveEnd() {
-            console.log(this.column)
-        },
         async deleteColumn() {
             await axios.delete(`/api/column/${ this.column.id }`)
             this.$modal.hide('delete-column')
@@ -108,6 +105,7 @@ export default {
             if(this.form.title !== "" && this.form.description !== "") {
                 this.form.columnId = this.column.id
                 await axios.post(`/api/card`, this.form)
+                this.$modal.hide('add-card')
                 this.$emit('refresh', true)
             } else  {
                 this.titleRequired = !this.form.title;
@@ -123,7 +121,7 @@ export default {
 </script>
 
 <style lang="scss">
-.ghost-card {
+.ghost {
     opacity: 0.5;
     background: #F7FAFC;
     border: 1px solid #4299e1;
@@ -173,7 +171,7 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        width: 100%;
+        width: 300px;
         min-height: 40px;
 
         .delete_button {
@@ -192,6 +190,13 @@ export default {
         align-items: center;
         border: 1px dashed black;
         cursor: pointer;
+
+        .header_section {
+            background-color: rgba(0, 0, 0, .3);
+            height: 50px;
+            padding-top: 20px;
+            padding-left: 20px;
+        }
     }
 }
 </style>
