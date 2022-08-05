@@ -1,8 +1,10 @@
 <template>
     <div class="column_container">
         <div class="column_container_header">
-            <label>Title</label>
-            <button class="delete_button" @click="$modal.show('delete-column')">
+            <label>
+               {{column.title}}
+            </label>
+            <button class="delete_button" @click="$modal.show(`delete-column-${column.id}`)">
                 <img :src="deleteIcon" alt="Delete Column Icon">
             </button>
         </div>
@@ -15,24 +17,25 @@
         >
             <card v-for="card in column.cards" :key="card.id" :card="card" @refresh="refresh"/>
         </draggable>
-        <div class="add_card_container" @click="$modal.show('add-card')">
+        <div class="add_card_container" @click="$modal.show(`add-card-${column.id}`)">
             Add Card
         </div>
-        <Modal class="delete-modal" name="delete-column">
+        <Modal class="delete-modal" :name="`delete-column-${column.id}`">
             <div class="delete_column_section">
                 <div class="header_section">
                     Are you sure you want to delete
+                    {{ column.id }}
                 </div>
                 <button @click="deleteColumn">
                     Yes
                 </button>
             </div>
         </Modal>
-        <Modal class="create_card_modal" name="add-card">
+        <Modal class="create_card_modal" :name="`add-card-${column.id}`">
             <div class="create_column_section">
                 <div class="header_section">
                    <label> Create Card.</label>
-                    <button  @click="$modal.hide('add-card')">X</button>
+                    <button  @click="$modal.hide(`add-card-${column.id}`)">X</button>
                 </div>
                 <div class="form_section">
                     <div>
@@ -98,14 +101,14 @@ export default {
     methods: {
         async deleteColumn() {
             await axios.delete(`/api/column/${ this.column.id }`)
-            this.$modal.hide('delete-column')
+            this.$modal.hide(`delete-column-${ this.column.id }`)
             this.refresh()
         },
         async createCard() {
             if(this.form.title !== "" && this.form.description !== "") {
                 this.form.columnId = this.column.id
                 await axios.post(`/api/card`, this.form)
-                this.$modal.hide('add-card')
+                this.$modal.hide(`add-card-${this.column.id}`)
                 this.refresh()
             } else  {
                 this.titleRequired = !this.form.title;
@@ -118,6 +121,7 @@ export default {
         },
         refresh() {
             this.$emit('refresh', true)
+            this.form.title = this.form.description = ""
         }
     }
 }

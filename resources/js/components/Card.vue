@@ -1,13 +1,13 @@
 <template>
   <div>
-      <div class="card_container"  v-on:click="$modal.show('detail-card')">
+      <div class="card_container"  v-on:click="$modal.show(`detail-card-${card.id}`)">
           {{ card.title }}
       </div>
-      <Modal class="detail-modal" name="detail-card">
+      <Modal class="detail-modal" :name="`detail-card-${card.id}`">
           <div class="detail_card_section">
               <div class="header_section">
                   <label>Card Detail</label>
-                  <button  @click="$modal.hide('detail-card')">X</button>
+                  <button  @click="$modal.hide(`detail-card-${card.id}`)">X</button>
               </div>
               <div class="detail_section">
                   <div>
@@ -57,7 +57,7 @@ export default {
         async updateCard() {
             if(this.form.title !== "" && this.form.description !== "") {
                 await axios.put(`/api/card/${this.card.id}`, this.form)
-                this.$modal.hide('detail-card')
+                this.$modal.hide(`detail-card-${this.card.id}`)
                 this.$emit('refresh', true)
             } else  {
                 this.titleRequired = !this.form.title;
