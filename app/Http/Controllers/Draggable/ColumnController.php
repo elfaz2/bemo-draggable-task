@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Draggable;
 
 use App\Http\Controllers\Controller;
+use App\Models\Column;
 use Illuminate\Http\Request;
 
 class ColumnController extends Controller
@@ -10,11 +11,15 @@ class ColumnController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
-        //
+        $query = Column::query()->with('cards');
+
+        return response()->json([
+            'data' => $query->get()
+        ]);
     }
 
     /**

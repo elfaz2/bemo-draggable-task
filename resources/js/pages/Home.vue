@@ -1,8 +1,7 @@
 <template>
     <div class="home_section">
         <Header/>
-        <Column/>
-        <Column/>
+        <Column v-for="(column, index) in columns" :key="index" :column="column"/>
         <div class="add_column_container">
             Add Column
         </div>
@@ -22,8 +21,18 @@ export default {
     },
     data() {
         return {
+            columns: []
         };
     },
+    async mounted() {
+        await this.fetchColumns()
+    },
+    methods: {
+        async fetchColumns() {
+            const { data } = await axios.get('/api/columns', )
+            this.columns = data.data
+        },
+    }
 }
 </script>
 

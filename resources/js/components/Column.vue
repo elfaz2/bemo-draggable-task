@@ -23,6 +23,12 @@ import draggable from "vuedraggable";
 import Card from "./Card";
 export default {
     name: "Column",
+    props: {
+        column: {
+            type: Object,
+            default: () => {}
+        }
+    },
     components: {
         Card,
         draggable
@@ -43,6 +49,10 @@ export default {
         };
     },
     methods: {
+        async fetchColumns() {
+            const { data } = await axios.get('/api/columns', )
+            console.log(data)
+        },
         clone({ name }) {
             return { name, id: idGlobal++ };
         },
