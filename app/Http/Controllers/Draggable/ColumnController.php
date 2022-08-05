@@ -13,8 +13,16 @@ class ColumnController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($date, $status): \Illuminate\Http\JsonResponse
+    public function index($access_token, $date, $status): \Illuminate\Http\JsonResponse
     {
+
+        if($access_token !== env('ACCESS_TOKEN')) {
+            return response()->json([
+                'data' => []
+            ]);
+        }
+
+
         $query = Column::query()->with('cards');
 
         if(isset($status) && $status == 'true' ) {
