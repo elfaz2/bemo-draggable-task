@@ -13,7 +13,7 @@
             ghost-class="ghost"
             group="cards"
         >
-            <card v-for="card in column.cards" :key="card.id" :card="card"/>
+            <card v-for="card in column.cards" :key="card.id" :card="card" @refresh="refresh"/>
         </draggable>
         <div class="add_card_container" @click="$modal.show('add-card')">
             Add Card
@@ -99,14 +99,14 @@ export default {
         async deleteColumn() {
             await axios.delete(`/api/column/${ this.column.id }`)
             this.$modal.hide('delete-column')
-            this.$emit('refresh', true)
+            this.refresh()
         },
         async createCard() {
             if(this.form.title !== "" && this.form.description !== "") {
                 this.form.columnId = this.column.id
                 await axios.post(`/api/card`, this.form)
                 this.$modal.hide('add-card')
-                this.$emit('refresh', true)
+                this.refresh()
             } else  {
                 this.titleRequired = !this.form.title;
                 this.descriptionRequired = !this.form.description;
@@ -115,6 +115,9 @@ export default {
         async updateCardPosition() {
             const { cards, id } =  this.column
             await axios.post('/api/update-card-position/', { cards, column_id: id })
+        },
+        refresh() {
+            this.$emit('refresh', true)
         }
     }
 }
