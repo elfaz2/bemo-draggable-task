@@ -1,10 +1,10 @@
 <template>
-    <div class="column_container">
+    <div class="column_container" :class="column.deleted_at ? 'deleted_column': ''">
         <div class="column_container_header">
             <label>
                {{column.title}}
             </label>
-            <button class="delete_button" @click="$modal.show(`delete-column-${column.id}`)">
+            <button v-if="!column.deleted_at" class="delete_button" @click="$modal.show(`delete-column-${column.id}`)">
                 <img :src="deleteIcon" alt="Delete Column Icon">
             </button>
         </div>
@@ -14,17 +14,17 @@
             :animation="200"
             ghost-class="ghost"
             group="cards"
+            @end="updateCardPosition"
         >
             <card v-for="card in column.cards" :key="card.id" :card="card" @refresh="refresh"/>
         </draggable>
-        <div class="add_card_container" @click="$modal.show(`add-card-${column.id}`)">
+        <div v-if="!column.deleted_at" class="add_card_container" @click="$modal.show(`add-card-${column.id}`)">
             Add Card
         </div>
         <Modal class="delete-modal" :name="`delete-column-${column.id}`">
             <div class="delete_column_section">
                 <div class="header_section">
                     Are you sure you want to delete
-                    {{ column.id }}
                 </div>
                 <button @click="deleteColumn">
                     Yes
@@ -67,6 +67,9 @@ export default {
         column: {
             type: Object,
             default: () => {}
+        },
+        columns: {
+
         }
     },
     components: {
@@ -76,13 +79,17 @@ export default {
     watch: {
         column: {
             handler(val){
-                // this.updateCardPosition()
+                this.cardsLen = val.cards.length
             },
             deep: true
+        },
+        cardsLen(val) {
+            this.updateCardPosition()
         }
     },
     data() {
         return {
+            cardsLen: this.column.cards.length,
             titleRequired: false,
             descriptionRequired: false,
             col_id: "",
@@ -94,9 +101,6 @@ export default {
             deleteIcon: require('../../assets/delete-icon.svg'),
             controlOnStart: true
         };
-    },
-    created() {
-        this.col_id = this.column.id
     },
     methods: {
         async deleteColumn() {
@@ -128,6 +132,10 @@ export default {
 </script>
 
 <style lang="scss">
+.deleted_column {
+    background-color: rgba(255, 22, 22, 0.2) !important;
+    cursor: not-allowed;
+}
 .ghost {
     opacity: 0.5;
     background: #F7FAFC;
@@ -174,6 +182,7 @@ export default {
     min-height: 100px;
     background-color: rgba(255, 255, 255, .7);
     border-radius: 10px;
+    overflow-y: scroll;
     &_header {
         display: flex;
         justify-content: space-between;

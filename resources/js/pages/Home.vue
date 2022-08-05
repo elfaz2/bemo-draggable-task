@@ -164,7 +164,7 @@ export default {
         margin-top: 120px;
         background-color: rgba(255, 255, 255, .7);
         border-radius: 10px;
-        width: 200px;
+        min-width: 200px;
         height: 80px;
         display: flex;
         justify-content: center;
