@@ -29,3 +29,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     Route::put('/card/{id}', [CardController::class, 'update']);
     Route::post('/update-card-position', [CardController::class, 'updateCardPosition']);
 
+    Route::get('/export-db', function () {
+         Spatie\DbDumper\Databases\MySql::create()
+            ->setDbName(env('DB_DATABASE'))
+            ->setUserName(env('DB_USERNAME'))
+            ->setPassword(env('DB_PASSWORD'))
+            ->dumpToFile('dump.sql');
+
+
+        $headers = array(
+            'Content-Type: application/pdf',
+        );
+       return response()->download(public_path('/dump.sql'));
+    });
+
+
+
