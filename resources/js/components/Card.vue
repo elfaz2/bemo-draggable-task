@@ -82,6 +82,7 @@ export default {
     margin-bottom: 14px;
     cursor: grabbing;
     background-color: rgba(255, 255, 255, .7);
+    padding: 10px;
 }
 .detail_card_section {
 
