@@ -16,32 +16,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/columns/{access_token}/{date}/{status}', [ColumnController::class, 'index']);
+Route::post('/column', [ColumnController::class, 'store']);
+Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
+
+Route::get('/cards', [CardController::class, 'index']);
+Route::post('/card', [CardController::class, 'store']);
+Route::put('/card/{id}', [CardController::class, 'update']);
+Route::post('/update-card-position', [CardController::class, 'updateCardPosition']);
+
+Route::get('/export-db', function () {
+     Spatie\DbDumper\Databases\MySql::create()
+        ->setDbName(env('DB_DATABASE'))
+        ->setUserName(env('DB_USERNAME'))
+        ->setPassword(env('DB_PASSWORD'))
+        ->dumpToFile('dump.sql');
+
+
+    $headers = array(
+        'Content-Type: application/pdf',
+    );
+   return response()->download(public_path('/dump.sql'));
 });
-
-    Route::get('/columns/{date}/{status}', [ColumnController::class, 'index']);
-    Route::post('/column', [ColumnController::class, 'store']);
-    Route::delete('/column/{id}', [ColumnController::class, 'destroy']);
-
-    Route::get('/cards', [CardController::class, 'index']);
-    Route::post('/card', [CardController::class, 'store']);
-    Route::put('/card/{id}', [CardController::class, 'update']);
-    Route::post('/update-card-position', [CardController::class, 'updateCardPosition']);
-
-    Route::get('/export-db', function () {
-         Spatie\DbDumper\Databases\MySql::create()
-            ->setDbName(env('DB_DATABASE'))
-            ->setUserName(env('DB_USERNAME'))
-            ->setPassword(env('DB_PASSWORD'))
-            ->dumpToFile('dump.sql');
-
-
-        $headers = array(
-            'Content-Type: application/pdf',
-        );
-       return response()->download(public_path('/dump.sql'));
-    });
 
 
 
